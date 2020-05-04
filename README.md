@@ -1,4 +1,4 @@
-# twitcasting_recorder_py
+# TwitCasting Recorder Py
 A python script for recording TwitCasting live streams
 
 ## Usage
