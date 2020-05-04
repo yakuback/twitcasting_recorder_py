@@ -108,7 +108,7 @@ class TwitcastRecorder:
             self.record_status=4; return 1
         else: return 0
 
-    def check_proxy_status(self):
+    def check_internet_status(self):
         # testing if google is connectable.
         requester = Requester("https://www.google.com")
         requester._get_response()
@@ -145,7 +145,7 @@ def main(USER_ID, INTERVAL):
     t = TwitcastRecorder(USER_ID)
     while True:
         try:
-            if not t.check_proxy_status(): print("[{0}] StatusCode: {1} ProxyError, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
+            if not t.check_proxy_status(): print("[{0}] StatusCode: {1} InternetError, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
             if not t.check_stream_status(): print("[{0}] StatusCode: {1} Live has NOT started, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
             elif t.record_status == 4: print("[{0}] StatusCode: {1} Live has started, try to record.".format(get_time(),t.record_status)); t.get_stream()
         except Exception as e:
