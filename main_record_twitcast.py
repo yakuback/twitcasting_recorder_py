@@ -26,20 +26,27 @@ class Requester:
         self.response = ""
 
     def _get_response(self):
-        self.response = requests.get(self.target, headers=self.headers)
-        self._response_status_check()
-        return self.response
+        try:
+            self.response = requests.get(self.target, headers=self.headers)
+            return 1
+        except Exception as e:
+            print("[{0}] {1}".format(get_time(),e))
+            return 0
 
     def _response_status_check(self):
+        if not self.response: return 0
         if self.response.status_code != requests.codes.ok:
             # if response status is abnormal, return boolean false.
             return 0
+        else: return 1
     
     def get_text(self):
-        return self._get_response().text
+        self._get_response()
+        return self.response.text
 
     def get_content(self):
-        return self._get_response().content
+        self._get_response()
+        return self.response.content
 
 class WebSocketLogConnection:
     def __init__(self,url,path,name):
@@ -105,14 +112,16 @@ class TwitcastRecorder:
         # testing if google is connectable.
         requester = Requester("https://www.google.com")
         requester._get_response()
-        if requester._response_status_check(): return 0
+        if not requester._response_status_check(): return 0
         else: self.record_status=1; return 1
 
     def check_stream_status(self):
         if self.record_status<1: return 0
         requester = Requester(self.STREAM_API)
+        requester._get_response()
+        if not requester._response_status_check(): return 0
+        self.record_status=2; 
         response_text = requester.get_text()
-        if requester._response_status_check(): self.record_status=2; return 0
         live_status = response_text.find("\"live\":true")
         if live_status != -1:
             self.record_status=3
@@ -140,11 +149,12 @@ def main(USER_ID, INTERVAL):
             if not t.check_stream_status(): print("[{0}] StatusCode: {1} Live has NOT started, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
             elif t.record_status == 4: print("[{0}] StatusCode: {1} Live has started, try to record.".format(get_time(),t.record_status)); t.get_stream()
         except Exception as e:
-            print(e)
+            print("[{0}] {1}".format(get_time(),e))
             main(USER_ID, INTERVAL)
 
+
 if __name__ == "__main__":
-    if len(sys.argv) == 1: print("[{0} Please input USER_ID]".format(get_time()))
+    if len(sys.argv) == 1: print("[{0}] Please input USER_ID".format(get_time()))
     if len(sys.argv) == 2: USER_ID = sys.argv[1]; INTERVAL=60
     if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], sys.argv[2]
     main(USER_ID, INTERVAL)
