@@ -1,5 +1,5 @@
 # TwitCasting Recorder Py
-A python script for recording TwitCasting live streams
+A simple python script for recording TwitCasting live streams
 
 ## Usage
 ```python
