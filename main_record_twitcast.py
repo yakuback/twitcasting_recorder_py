@@ -135,7 +135,7 @@ def get_pure_time():
 def main():
     if len(sys.argv) == 1: print("[{0} Please input USER_ID]".format(get_time()))
     if len(sys.argv) == 2: USER_ID = sys.argv[1]; INTERVAL=60
-    if len(sys.argv) == 3: INTERVAL = sys.argv[2]
+    if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], sys.argv[2]
     
     t = TwitcastRecorder(USER_ID)
     while True:
