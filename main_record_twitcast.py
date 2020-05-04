@@ -144,7 +144,7 @@ def main(USER_ID, INTERVAL):
             main(USER_ID, INTERVAL)
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1: USER_ID, INTERVAL="miso_ssw",60
+    if len(sys.argv) == 1: print("[{0} Please input USER_ID]".format(get_time()))
     if len(sys.argv) == 2: USER_ID = sys.argv[1]; INTERVAL=60
     if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], sys.argv[2]
     main(USER_ID, INTERVAL)
