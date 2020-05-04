@@ -7,7 +7,7 @@ $ python main_record_twitcast.py {USER_ID} {LOOP_TIME}
 ```
 Sample:
 ```python
-$ python main_record_twitcast.py miso_ssw 60
+$ python main_record_twitcast.py user_id 60
 ```
 
 ## Thanks
