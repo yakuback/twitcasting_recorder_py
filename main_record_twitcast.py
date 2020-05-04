@@ -132,16 +132,19 @@ def get_time():
 def get_pure_time():
     return time.strftime('%Y%m%d_%H%M%S',time.localtime(time.time()))
 
-def main():
-    if len(sys.argv) == 1: print("[{0} Please input USER_ID]".format(get_time()))
-    if len(sys.argv) == 2: USER_ID = sys.argv[1]; INTERVAL=60
-    if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], sys.argv[2]
-    
+def main(USER_ID, INTERVAL):
     t = TwitcastRecorder(USER_ID)
     while True:
-        if not t.check_proxy_status(): print("[{0}] StatusCode: {1} ProxyError, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
-        if not t.check_stream_status(): print("[{0}] StatusCode: {1} Live has NOT started, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
-        elif t.record_status == 4: print("[{0}] StatusCode: {1} Live has started, try to record.".format(get_time(),t.record_status)); t.get_stream()
+        try:
+            if not t.check_proxy_status(): print("[{0}] StatusCode: {1} ProxyError, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
+            if not t.check_stream_status(): print("[{0}] StatusCode: {1} Live has NOT started, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
+            elif t.record_status == 4: print("[{0}] StatusCode: {1} Live has started, try to record.".format(get_time(),t.record_status)); t.get_stream()
+        except Exception as e:
+            print(e)
+            main(USER_ID, INTERVAL)
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 1: USER_ID, INTERVAL="miso_ssw",60
+    if len(sys.argv) == 2: USER_ID = sys.argv[1]; INTERVAL=60
+    if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], sys.argv[2]
+    main(USER_ID, INTERVAL)
