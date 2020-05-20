@@ -145,7 +145,7 @@ def main(USER_ID, INTERVAL):
     t = TwitcastRecorder(USER_ID)
     while True:
         try:
-            if not t.check_proxy_status(): print("[{0}] StatusCode: {1} InternetError, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
+            if not t.check_internet_status(): print("[{0}] StatusCode: {1} InternetError, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
             if not t.check_stream_status(): print("[{0}] StatusCode: {1} Live has NOT started, retry after {2}.".format(get_time(),t.record_status,INTERVAL));time.sleep(INTERVAL);continue
             elif t.record_status == 4: print("[{0}] StatusCode: {1} Live has started, try to record.".format(get_time(),t.record_status)); t.get_stream()
         except Exception as e:
@@ -156,5 +156,5 @@ def main(USER_ID, INTERVAL):
 if __name__ == "__main__":
     if len(sys.argv) == 1: print("[{0}] Please input USER_ID".format(get_time()))
     if len(sys.argv) == 2: USER_ID = sys.argv[1]; INTERVAL=60
-    if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], sys.argv[2]
+    if len(sys.argv) == 3: USER_ID, INTERVAL = sys.argv[1], int(sys.argv[2])
     main(USER_ID, INTERVAL)
